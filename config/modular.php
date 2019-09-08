@@ -16,9 +16,12 @@ return [
 
     'modules' => [
         'Admin' => [
-            
+
         ],
         'Public' => [
+
+        ],
+        'Common' =>[
 
         ]
     ]
