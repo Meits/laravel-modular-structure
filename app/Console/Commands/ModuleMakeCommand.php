@@ -57,13 +57,17 @@ class ModuleMakeCommand extends Command
             $this->input->setOption('migration', true);
             $this->input->setOption('vue', true);
             $this->input->setOption('view', true);
+            $this->input->setOption('api', true);
         }
 
         $this->createModel();
 
 
         $this->createController();
-        $this->createApiController();
+
+        if($this->option('api')) {
+            $this->createApiController();
+        }
 
         if ($this->option('migration')) {
             $this->createMigration();
@@ -122,7 +126,6 @@ class ModuleMakeCommand extends Command
 
         $path = $this->getControllerPath($this->argument('name'));
 
-
         if ($this->alreadyExists($path)) {
             $this->error('Controller already exists!');
         } else {
@@ -155,7 +158,7 @@ class ModuleMakeCommand extends Command
             $this->updateModularConfig();
         }
 
-        // create routes_api.php
+        // create routes.php
         $this->createRoutes($controller, $modelName);
     }
     /**
@@ -477,43 +480,6 @@ class ModuleMakeCommand extends Command
 
     }
 
-    /**
-     * @param String $controller
-     * @param String $modelName
-     * @param String $fileName
-     * @param String $stubPath
-     */
-    private function createSingleRoute(String $controller, String $modelName, String $fileName, String $stubPath )
-    {
-
-        $routePath = $this->getRoutesPath($this->argument('name'),$fileName);
-
-        if ($this->alreadyExists($routePath)) {
-            $this->error('Routes already exists!');
-        } else {
-
-            $this->makeDirectory($routePath);
-
-            $stub = $this->files->get(base_path($stubPath));
-
-            $stub = str_replace(
-                [
-                    'DummyClass',
-                    'DummyRoutePrefix',
-                    'DummyModelVariable',
-                ],
-                [
-                    $controller.'Controller',
-                    Str::plural(Str::snake(lcfirst($modelName), '-')),
-                    lcfirst($modelName)
-                ],
-                $stub
-            );
-
-            $this->files->put($routePath, $stub);
-            $this->info('Routes created successfully.');
-        }
-    }
 
     private function getApiRoutesPath($name)
     {
