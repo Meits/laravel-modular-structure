@@ -24,7 +24,8 @@ class ModuleMakeCommand extends Command
                                 {--all       : Additionally create Migration and VueComponent} 
                                 {--migration : Additionally create only Migration} 
                                 {--vue       : Additionally create only VueComponent}
-                                {--view       : Additionally create only View}'
+                                {--view       : Additionally create only View}
+                                {--api       : Additionally create only View}'
     ;
 
     /**
@@ -146,7 +147,7 @@ class ModuleMakeCommand extends Command
                     "App\Modules\\".trim($this->argument('name'))."\Controllers",
                     $this->laravel->getNamespace(),
                     $controller.'Controller',
-                    "App\Modules\Models\\{$modelName}\\{$modelName}",
+                    "App\Modules\\".trim($this->argument('name'))."\Models\\{$modelName}",
                     $modelName,
                     lcfirst(($modelName))
                 ],
@@ -195,7 +196,7 @@ class ModuleMakeCommand extends Command
                     "App\Modules\\".trim($this->argument('name'))."\Api\Controllers",
                     $this->laravel->getNamespace(),
                     $controller.'Controller',
-                    "App\Modules\Models\\{$modelName}\\{$modelName}",
+                    "App\Modules\\".trim($this->argument('name'))."\Models\\{$modelName}",
                     $modelName,
                     lcfirst(($modelName))
                 ],
