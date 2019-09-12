@@ -369,7 +369,7 @@ class ModuleMakeCommand extends Command
      * @param $name
      * @return array
      */
-    protected function getViewPath($name) : array
+    protected function getViewPath($name) : object
     {
 
         $arrFiles = collect([

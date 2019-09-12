@@ -13,7 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app['view']->addNamespace('Admin', base_path() . '/resources/views/Admin');
     }
 
     /**

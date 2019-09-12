@@ -1,11 +1,13 @@
+
 <?php
 
-namespace App\Modules\Admin\Dashboard\Controllers;
+namespace App\Modules\Admin\Faq\Api\Controllers;
 
-use App\Modules\Admin\Dashboard\Classes\Base;
+use App\Modules\Admin\Faq\Models\Faq;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
-class DashboardController extends Base
+class FaqController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,14 +16,7 @@ class DashboardController extends Base
      */
     public function index()
     {
-
-        /** @var String $title */
-        $this->title = __("admin.pages_home_title");
-        /** @var String $content */
-        $this->content = view('Admin::Dashboard.index')->with(['title' => $this->title])->render();
-
-        //render output
-        return $this->renderOutput();
+        //
     }
 
     /**
@@ -38,10 +33,10 @@ class DashboardController extends Base
     /**
      * Display the specified resource.
      *
-     * @param  \App\Modules\Admin\Dashboard\Models\Dashboard  $dashboard
+     * @param  \App\Modules\Admin\Faq\Models\Faq  $faq
      * @return \Illuminate\Http\Response
      */
-    public function show(Dashboard $dashboard)
+    public function show(Faq $faq)
     {
         //
     }
@@ -50,10 +45,10 @@ class DashboardController extends Base
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Modules\Admin\Dashboard\Models\Dashboard  $dashboard
+     * @param  \App\Modules\Admin\Faq\Models\Faq  $faq
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Dashboard $dashboard)
+    public function update(Request $request, Faq $faq)
     {
         //
     }
@@ -61,10 +56,10 @@ class DashboardController extends Base
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Modules\Admin\Dashboard\Models\Dashboard  $dashboard
+     * @param  \App\Modules\Admin\Faq\Models\Faq  $faq
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Dashboard $dashboard)
+    public function destroy(Faq $faq)
     {
         //
     }
