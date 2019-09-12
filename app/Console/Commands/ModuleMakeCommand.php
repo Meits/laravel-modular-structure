@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Console\Commands;
 
@@ -25,6 +26,8 @@ class ModuleMakeCommand extends Command
                                 {--migration : Additionally create only Migration} 
                                 {--vue       : Additionally create only VueComponent}
                                 {--view       : Additionally create only View}
+                                {--controller       : Additionally create only View}
+                                {--model       : Additionally create only Model}
                                 {--api       : Additionally create only View}'
     ;
 
@@ -52,17 +55,19 @@ class ModuleMakeCommand extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle() : void
     {
         if ($this->option('all')) {
             $this->input->setOption('migration', true);
             $this->input->setOption('vue', true);
             $this->input->setOption('view', true);
             $this->input->setOption('api', true);
+            $this->input->setOption('model', true);
         }
 
-        $this->createModel();
-
+        if($this->option('model')) {
+            $this->createModel();
+        }
 
         $this->createController();
 
@@ -86,12 +91,12 @@ class ModuleMakeCommand extends Command
      *
      * @return void
      */
-    protected function createModel()
+    protected function createModel() : void
     {
         $model = Str::singular(Str::studly(class_basename($this->argument('name'))));
 
         $this->call('make:model', [
-            'name' => "App\Modules\\".trim($this->argument('name'))."\\Models\\{$model}"
+            'name' => "App\\Modules\\".trim($this->argument('name'))."\\Models\\{$model}"
         ]);
     }
 
@@ -100,7 +105,7 @@ class ModuleMakeCommand extends Command
      *
      * @return void
      */
-    protected function createMigration()
+    protected function createMigration() : void
     {
         $table = Str::plural(Str::snake(class_basename($this->argument('name'))));
 
@@ -119,7 +124,7 @@ class ModuleMakeCommand extends Command
      *
      * @return void
      */
-    protected function createController()
+    protected function createController() : void
     {
         $controller = Str::studly(class_basename($this->argument('name')));
 
@@ -144,10 +149,10 @@ class ModuleMakeCommand extends Command
                     'DummyModelVariable',
                 ],
                 [
-                    "App\Modules\\".trim($this->argument('name'))."\Controllers",
+                    "App\\Modules\\".trim($this->argument('name'))."\\Controllers",
                     $this->laravel->getNamespace(),
                     $controller.'Controller',
-                    "App\Modules\\".trim($this->argument('name'))."\Models\\{$modelName}",
+                    "App\\Modules\\".trim($this->argument('name'))."\\Models\\{$modelName}",
                     $modelName,
                     lcfirst(($modelName))
                 ],
@@ -167,7 +172,7 @@ class ModuleMakeCommand extends Command
      *
      * @return void
      */
-    protected function createApiController()
+    protected function createApiController() : void
     {
         $controller = Str::studly(class_basename($this->argument('name')));
 
@@ -193,10 +198,10 @@ class ModuleMakeCommand extends Command
                     'DummyModelVariable',
                 ],
                 [
-                    "App\Modules\\".trim($this->argument('name'))."\Api\Controllers",
+                    "App\\Modules\\".trim($this->argument('name'))."\\Api\\Controllers",
                     $this->laravel->getNamespace(),
                     $controller.'Controller',
-                    "App\Modules\\".trim($this->argument('name'))."\Models\\{$modelName}",
+                    "App\\Modules\\".trim($this->argument('name'))."\\Models\\{$modelName}",
                     $modelName,
                     lcfirst(($modelName))
                 ],
@@ -217,7 +222,7 @@ class ModuleMakeCommand extends Command
      *
      * @return void
      */
-    protected function createVueComponent()
+    protected function createVueComponent() : void
     {
         $path = $this->getVueComponentPath($this->argument('name'));
 
@@ -248,7 +253,7 @@ class ModuleMakeCommand extends Command
     /**
      *
      */
-    protected function createView()
+    protected function createView() : void
     {
         $paths = $this->getViewPath($this->argument('name'));
 
@@ -282,7 +287,7 @@ class ModuleMakeCommand extends Command
      *
      * @return string
      */
-    protected function getStub()
+    protected function getStub() : String
     {
         return base_path('resources/stubs/model.stub');
     }
@@ -292,7 +297,7 @@ class ModuleMakeCommand extends Command
      *
      * @return string
      */
-    protected function updateModularConfig()
+    protected function updateModularConfig() : void
     {
         $group = explode('\\', $this->argument('name'))[0];
         $module = Str::studly(class_basename($this->argument('name')));
@@ -321,7 +326,7 @@ class ModuleMakeCommand extends Command
      * @param  string  $rootNamespace
      * @return string
      */
-    protected function getDefaultNamespace($rootNamespace)
+    protected function getDefaultNamespace($rootNamespace) : String
     {
         return $rootNamespace;
     }
@@ -332,7 +337,7 @@ class ModuleMakeCommand extends Command
      * @param  string  $name
      * @return string
      */
-    protected function getControllerPath($name)
+    protected function getControllerPath($name) : String
     {
         $controller = Str::studly(class_basename($name));
         return $this->laravel['path'].'/Modules/'.str_replace('\\', '/', $name)."/Controllers/"."{$controller}Controller.php";
@@ -344,7 +349,7 @@ class ModuleMakeCommand extends Command
      * @param  string  $name
      * @return string
      */
-    protected function getRoutesPath($name)
+    protected function getRoutesPath($name) : String
     {
         return $this->laravel['path'].'/Modules/'.str_replace('\\', '/', $name)."/Routes/web.php";
     }
@@ -355,12 +360,16 @@ class ModuleMakeCommand extends Command
      * @param  string  $name
      * @return string
      */
-    protected function getVueComponentPath($name)
+    protected function getVueComponentPath($name) : String
     {
         return base_path('resources/js/components/'.str_replace('\\', '/', $name).".vue");
     }
 
-    protected function getViewPath($name)
+    /**
+     * @param $name
+     * @return array
+     */
+    protected function getViewPath($name) : array
     {
 
         $arrFiles = collect([
@@ -384,7 +393,7 @@ class ModuleMakeCommand extends Command
      * @param  string  $path
      * @return bool
      */
-    protected function alreadyExists($path)
+    protected function alreadyExists($path) : bool
     {
         return $this->files->exists($path);
     }
@@ -395,7 +404,7 @@ class ModuleMakeCommand extends Command
      * @param  string  $path
      * @return string
      */
-    protected function makeDirectory($path)
+    protected function makeDirectory($path) : string
     {
 
         if (! $this->files->isDirectory(dirname($path))) {
@@ -409,7 +418,7 @@ class ModuleMakeCommand extends Command
      * @param String $controller
      * @param String $modelName
      */
-    private function createRoutes(String $controller, String $modelName)
+    private function createRoutes(String $controller, String $modelName) : void
     {
 
         $routePath = $this->getRoutesPath($this->argument('name'));
@@ -448,7 +457,7 @@ class ModuleMakeCommand extends Command
      * @param String $controller
      * @param String $modelName
      */
-    private function createApiRoutes(String $controller, String $modelName)
+    private function createApiRoutes(String $controller, String $modelName) : void
     {
 
         $routePath = $this->getApiRoutesPath($this->argument('name'));
@@ -482,13 +491,21 @@ class ModuleMakeCommand extends Command
     }
 
 
-    private function getApiRoutesPath($name)
+    /**
+     * @param $name
+     * @return string
+     */
+    private function getApiRoutesPath($name) : string
     {
         return $this->laravel['path'].'/Modules/'.str_replace('\\', '/', $name)."/Routes/api.php";
 
     }
 
-    private function getApiControllerPath($name)
+    /**
+     * @param $name
+     * @return string
+     */
+    private function getApiControllerPath($name) : string
     {
         $controller = Str::studly(class_basename($name));
         return $this->laravel['path'].'/Modules/'.str_replace('\\', '/', $name)."/Controllers/Api/"."{$controller}Controller.php";
