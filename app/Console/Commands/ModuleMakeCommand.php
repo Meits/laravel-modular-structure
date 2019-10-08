@@ -198,7 +198,7 @@ class ModuleMakeCommand extends Command
                     'DummyModelVariable',
                 ],
                 [
-                    "App\\Modules\\".trim($this->argument('name'))."\\Api\\Controllers",
+                    "App\\Modules\\".trim($this->argument('name'))."\\Controllers\\Api",
                     $this->laravel->getNamespace(),
                     $controller.'Controller',
                     "App\\Modules\\".trim($this->argument('name'))."\\Models\\{$modelName}",

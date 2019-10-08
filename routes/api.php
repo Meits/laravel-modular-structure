@@ -17,24 +17,31 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-$modules        = config('modular.modules');
-$path           = config('modular.path');
+$modules = config('modular.modules');
+$path = config('modular.path');
 $base_namespace = config('modular.base_namespace');
 
-if ($modules) {
-    foreach ($modules as $mod => $submodules) {
-        foreach ($submodules as $key => $sub) {
-            if (is_string($key)) {
-                $sub = $key;
-            }
 
-            $relativePath = "/$mod/$sub";
-            $routesPath   = "{$path}{$relativePath}/Routes/api.php";
 
-            if (file_exists($routesPath)) {
-                Route::namespace("Modules\\$mod\\$sub\Controllers")
-                    ->group($routesPath);
+        if ($modules) {
+            foreach ($modules as $mod => $submodules) {
+                foreach ($submodules as $key => $sub) {
+                    if (is_string($key)) {
+                        $sub = $key;
+                    }
+
+                    $relativePath = "/$mod/$sub";
+                    $routesPath = "{$path}{$relativePath}/Routes/api.php";
+
+                    if (file_exists($routesPath)) {
+
+                        Route::group(['prefix' => strtolower($mod)], function () use ($mod, $sub, $routesPath) {
+                            Route::namespace("Modules\\$mod\\$sub\Controllers")
+                                ->group($routesPath);
+                        });
+                    }
+                }
             }
         }
-    }
-}
+
+
