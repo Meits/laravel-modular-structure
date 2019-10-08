@@ -16,11 +16,8 @@ return [
 
     'modules' => [
         'Admin' => [
-            'Faq',
-            'Dashboard',
-            'Auth',
-
-        ],
+        
+		],
         'Public' => [
 
         ],
