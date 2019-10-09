@@ -9,6 +9,7 @@
 return [
     'path' => base_path() . '/app/Modules',
     'base_namespace' => 'App\Modules',
+    'groupWithoutPrefix' => 'Pub',
 
     /**
      * Modules
@@ -16,13 +17,11 @@ return [
 
     'modules' => [
         'Admin' => [
-        
+            'Blog',
 		],
-        'Public' => [
 
-        ],
-        'Common' => [
-
+        'Pub' => [
+            'Blog',
         ]
     ]
 ];
